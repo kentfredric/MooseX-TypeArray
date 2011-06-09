@@ -1,5 +1,6 @@
 use strict;
 use warnings;
+
 package MooseX::TypeArray;
 
 # ABSTRACT: Create composite types where all subtypes must be satisfied
@@ -22,7 +23,7 @@ package MooseX::TypeArray;
       message { "This number ($_) is not bigger than ten!" };
 
 
-    typearray NaturalAndBiggerThanTen => 'Natural', 'BiggerThanTen';
+    typearray NaturalAndBiggerThanTen => [ 'Natural', 'BiggerThanTen' ];
 
     # or this , which is the same thing.
 
@@ -64,4 +65,49 @@ package MooseX::TypeArray;
   }
 =cut
 
+use Sub::Exporter -setup => {
+  exports => [qw( typearray )],
+  groups  => [ default => [qw( typearray )] ],
+};
+
+use Moose::Util::TypeConstraints ();
+
+sub typearray {
+  my ( $name, @rest ) = @_;
+  my ($config) = {};
+  if ( ref $rest[-1] eq 'HASH' ) {
+    $config = pop @rest;
+  }
+  $config->{combining} = [] if not exists $config->{combining};
+  push @{ $config->{combining} }, @rest;
+
+  my $pkg_defined_in = scalar( caller(0) );
+
+  if ( defined $name ) {
+
+    my $type = Moose::Util::TypeConstraints::get_type_constraint($name);
+
+    if ( defined $type and $type->_package_defined_in eq $pkg_defined_in ) {
+      require Carp;
+      Carp::confess( "The type constraint '$name' has already been created in "
+          . $type->_package_defined_in
+          . " and cannot be created again in "
+          . $pkg_defined_in );
+    }
+
+    if ( $name =~ /^[\w:\.]+$/ ) {
+      require Carp;
+      Carp::confess(
+        qq{$name contains invalid characters for a type name.} . qq{ Names can contain alphanumeric character, ":", and "."\n} );
+    }
+  }
+
+  my %opts = (
+    name               => $name,
+    package_defined_in => $pkg_defined_in,
+#    ( $check     ? ( constraint => $check )     : () ),
+    ( $message   ? ( message    => $message )   : () ),
+#    ( $optimized ? ( optimized  => $optimized ) : () ),
+  );
+}
 1;

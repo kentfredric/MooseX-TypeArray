@@ -10,7 +10,7 @@ subtype 'Natural', as 'Int', where { $_ > 0 }, message { "This number ( $_ ) is 
 
 subtype 'BiggerThanTen', as 'Int', where { $_ > 10 }, message { "This number ( $_ ) is not bigger than ten!" };
 
-typearray NaturalAndBiggerThanTen => 'Natural', 'BiggerThanTen';
+typearray 'NaturalAndBiggerThanTen' => [ 'Natural', 'BiggerThanTen' ];
 
 no Moose::Util::TypeConstraints;
 no MooseX::TypeArray;
