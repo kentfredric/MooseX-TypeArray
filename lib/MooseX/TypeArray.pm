@@ -22,11 +22,11 @@ package MooseX::TypeArray;
       message { "This number ($_) is not bigger than ten!" };
 
 
-    typearray 'NaturalAndBiggerThanTen' => 'Natural', 'BiggerThanTen';
+    typearray NaturalAndBiggerThanTen => 'Natural', 'BiggerThanTen';
 
     # or this , which is the same thing.
 
-    typearray 'NaturalAndBiggerThanTen' => {
+    typearray NaturalAndBiggerThanTen => {
       combining => [qw( Natural BiggerThanTen )],
     };
 
