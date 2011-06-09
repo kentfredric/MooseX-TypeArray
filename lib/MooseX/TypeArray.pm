@@ -9,6 +9,7 @@ package MooseX::TypeArray;
   {
     package #
       Foo;
+    use Moose::Util::TypeConstraint;
     use MooseX::TypeArray;
     subtype 'Natural',
       as 'Int',
