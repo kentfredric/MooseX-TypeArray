@@ -70,58 +70,30 @@ use Sub::Exporter -setup => {
   groups  => [ default => [qw( typearray )] ],
 };
 
+my $sugarmap = {
+
+  #  '' => sub {},
+  'ARRAY' => sub { { name => undef, combining => $_[0], } },
+  'HASH' => sub { { name => undef, %{ $_[0] }, combining => [ @{ $_[0]->{combining} || [] } ], } },
+
+  #  '_string' => sub {},
+  '_string,ARRAY' => sub { { name => $_[0], combining => $_[1], } },
+  '_string,HASH' => sub { { name => $_[0], %{ $_[1] }, combining => [ @{ $_[1]->{combining} || [] } ], } },
+  'ARRAY,HASH' => sub { { name => undef, %{ $_[1] }, combining => [ @{ $_[1]->{combining} || [] }, @{ $_[0] } ], } },
+  '_string,ARRAY,HASH' => sub { { name => $_[0], %{ $_[2] }, combining => [ @{ $_[2]->{combining} || [] }, @{ $_[1] } ], } },
+
+};
+
 sub _desugar_typearray {
   my (@args) = @_;
   my (@argtypes) = map { ref $_ ? ref $_ : '_string' } @args;
   my $signature = join q{,}, @argtypes;
 
-  #  return {
-  #    name      => undef,
-  #    combining => []
-  #  } if $signature eq '';
-
-  return {
-    name => undef,
-    %{ $args[0] },
-    combining => [ @{ $args[0]->{combining} || [] } ],
-  } if $signature eq 'HASH';
-
-  return {
-    name      => undef,
-    combining => $args[0],
-  } if $signature eq 'ARRAY';
-
-  # return { name => $args[0], } if $signature eq '_string';
-
-  return {
-    name      => $args[0],
-    combining => $args[1],
-
-  } if $signature eq '_string,ARRAY';
-
-  return {
-    name => $args[0],
-    %{ $args[1] },
-    combining => [ @{ $args[1]->{combining} || [] } ],
-
-  } if $signature eq '_string,HASH';
-
-  return {
-    name => undef,
-    %{ $args[1] },
-    combining => [ @{ $args[1]->{combining} || [] }, @{ $args[0] } ],
-    }
-    if $signature eq 'ARRAY,HASH';
-
-  return {
-    name => $args[0],
-    %{ $args[2] },
-    combining => [ @{ $args[2]->{combining} || [] }, @{ $args[1] } ]
-    }
-    if $signature eq '_string,ARRAY,HASH';
-
+  if ( exists $sugarmap->{$signature} ) {
+    return $sugarmap->{$signature}->(@args);
+  }
   require Carp;
-  Carp::confess( 'Unexpected parameters types passed: <' . $signature . '>' );
+  Carp::confess( 'Unexpected parameters types passed: <' . $signature . '>,' . qq{\n} .  'Expected one from [ ' . ( join q{, }, map { '<' . $_ . '>' } sort keys %{$sugarmap} ) . ' ] ' );
 }
 
 sub _check_conflict_names {
