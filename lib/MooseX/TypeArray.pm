@@ -72,42 +72,89 @@ use Sub::Exporter -setup => {
 
 use Moose::Util::TypeConstraints ();
 
+sub _desugar_typearray {
+  my (@args) = @_;
+  my (@argtypes) = map { ref $_ ? ref $_ : '_string' } @args;
+  my $signature = join q{,}, @args;
+
+  #  return {
+  #    name      => undef,
+  #    combining => []
+  #  } if $signature eq '';
+
+  return {
+    name => undef,
+    %{ $args[0] },
+  } if $signature eq 'HASH';
+
+  return {
+    name      => undef,
+    combining => $args[0],
+  } if $signature eq 'ARRAY';
+
+  # return { name => $args[0], } if $signature eq '_string';
+
+  return {
+    name      => $args[0],
+    combining => $args[1],
+  } if $signature eq '_string,ARRAY';
+
+  return {
+    name => $args[0],
+    %{ $args[1] },
+  } if $signature eq '_string,HASH';
+
+  return {
+    name => undef,
+    %{ $args[1] },
+    combining => [ @{ $args[1]->{combining} || [] }, @{ $args[0] } ],
+    }
+    if $signature eq 'ARRAY,HASH';
+
+  return {
+    name => $args[0],
+    %{ $args[2] },
+    combining => [ @{ $args[2]->{combining} || [] }, @{ $args[1] } ]
+    }
+    if $signature eq '_string,ARRAY,HASH';
+
+  require Carp;
+  Carp::confess( 'Unexpected parameters passed: "' . $signature . '"' );
+}
+
 sub typearray {
-  my ( $name, @rest ) = @_;
-  my ($config) = {};
-  if ( ref $rest[-1] eq 'HASH' ) {
-    $config = pop @rest;
-  }
-  $config->{combining} = [] if not exists $config->{combining};
-  push @{ $config->{combining} }, @rest;
+  my $config = _desugar_typearray(@_);
 
-  my $pkg_defined_in = scalar( caller(0) );
+  $config->{package_defined_in} = scalar( caller(0) );
 
-  if ( defined $name ) {
+  if ( defined $config->{name} ) {
 
-    my $type = Moose::Util::TypeConstraints::get_type_constraint($name);
+    my $type = Moose::Util::TypeConstraints::get_type_constraint( $config->{name} );
 
-    if ( defined $type and $type->_package_defined_in eq $pkg_defined_in ) {
+    if ( defined $type and $type->_package_defined_in eq $config->{package_defined_in} ) {
       require Carp;
-      Carp::confess( "The type constraint '$name' has already been created in "
+      Carp::confess( "The type constraint '$config->{name}' has already been created in "
           . $type->_package_defined_in
           . " and cannot be created again in "
-          . $pkg_defined_in );
+          . $config->{package_defined_in} );
     }
 
-    if ( $name =~ /^[\w:\.]+$/ ) {
+    if ( $config->{name} =~ /^[\w:\.]+$/ ) {
       require Carp;
-      Carp::confess(
-        qq{$name contains invalid characters for a type name.} . qq{ Names can contain alphanumeric character, ":", and "."\n} );
+      Carp::confess( $config->{name}
+          . qq{ contains invalid characters for a type name.}
+          . qq{ Names can contain alphanumeric character, ":", and "."\n} );
     }
   }
 
   my %opts = (
     name               => $name,
     package_defined_in => $pkg_defined_in,
-#    ( $check     ? ( constraint => $check )     : () ),
-    ( $message   ? ( message    => $message )   : () ),
-#    ( $optimized ? ( optimized  => $optimized ) : () ),
+
+    #    ( $check     ? ( constraint => $check )     : () ),
+    ( $message ? ( message => $message ) : () ),
+
+    #    ( $optimized ? ( optimized  => $optimized ) : () ),
   );
 }
 1;
