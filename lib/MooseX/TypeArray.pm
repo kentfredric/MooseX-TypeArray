@@ -83,6 +83,7 @@ sub _desugar_typearray {
   return {
     name => undef,
     %{ $args[0] },
+    combining => [ @{ $args[0]->{combining} || [] } ],
   } if $signature eq 'HASH';
 
   return {
@@ -95,11 +96,14 @@ sub _desugar_typearray {
   return {
     name      => $args[0],
     combining => $args[1],
+
   } if $signature eq '_string,ARRAY';
 
   return {
     name => $args[0],
     %{ $args[1] },
+    combining => [ @{ $args[1]->{combining} || [] } ],
+
   } if $signature eq '_string,HASH';
 
   return {
@@ -117,7 +121,7 @@ sub _desugar_typearray {
     if $signature eq '_string,ARRAY,HASH';
 
   require Carp;
-  Carp::confess( 'Unexpected parameters passed: "' . $signature . '"' );
+  Carp::confess( 'Unexpected parameters types passed: <' . $signature . '>' );
 }
 
 sub _check_conflict_names {
