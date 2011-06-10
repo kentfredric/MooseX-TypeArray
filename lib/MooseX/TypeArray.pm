@@ -70,12 +70,10 @@ use Sub::Exporter -setup => {
   groups  => [ default => [qw( typearray )] ],
 };
 
-use Moose::Util::TypeConstraints ();
-
 sub _desugar_typearray {
   my (@args) = @_;
   my (@argtypes) = map { ref $_ ? ref $_ : '_string' } @args;
-  my $signature = join q{,}, @args;
+  my $signature = join q{,}, @argtypes;
 
   #  return {
   #    name      => undef,
@@ -122,39 +120,42 @@ sub _desugar_typearray {
   Carp::confess( 'Unexpected parameters passed: "' . $signature . '"' );
 }
 
+sub _check_conflict_names {
+  my ( $name, $package ) = @_;
+  require Moose::Util::TypeConstraints;
+
+  my $type = Moose::Util::TypeConstraints::find_type_constraint($name);
+
+  if ( defined $type and $type->_package_defined_in eq $package ) {
+    require Carp;
+    Carp::confess( "The type constraint '$name' has already been created in "
+        . $type->_package_defined_in
+        . " and cannot be created again in $package " );
+  }
+  if ( $name !~ /^[\w:\.]+$/ ) {
+    require Carp;
+    Carp::confess(
+      $name . qq{ contains invalid characters for a type name.} . qq{ Names can contain alphanumeric character, ":", and "."\n} );
+  }
+  return 1;
+}
+
 sub typearray {
   my $config = _desugar_typearray(@_);
 
   $config->{package_defined_in} = scalar( caller(0) );
 
+  _check_conflict_names( $config->{name}, $config->{package_defined_in} ) if defined $config->{name};
+  require Moose::Meta::TypeConstraint::TypeArray;
+  my $constraint = Moose::Meta::TypeConstraint::TypeArray->new( %{$config} );
+
   if ( defined $config->{name} ) {
-
-    my $type = Moose::Util::TypeConstraints::get_type_constraint( $config->{name} );
-
-    if ( defined $type and $type->_package_defined_in eq $config->{package_defined_in} ) {
-      require Carp;
-      Carp::confess( "The type constraint '$config->{name}' has already been created in "
-          . $type->_package_defined_in
-          . " and cannot be created again in "
-          . $config->{package_defined_in} );
-    }
-
-    if ( $config->{name} =~ /^[\w:\.]+$/ ) {
-      require Carp;
-      Carp::confess( $config->{name}
-          . qq{ contains invalid characters for a type name.}
-          . qq{ Names can contain alphanumeric character, ":", and "."\n} );
-    }
+    require Moose::Util::TypeConstraints;
+    Moose::Util::TypeConstraints::register_type_constraint($constraint);
   }
 
-  my %opts = (
-    name               => $name,
-    package_defined_in => $pkg_defined_in,
+  return $constraint;
 
-    #    ( $check     ? ( constraint => $check )     : () ),
-    ( $message ? ( message => $message ) : () ),
-
-    #    ( $optimized ? ( optimized  => $optimized ) : () ),
-  );
 }
+
 1;
