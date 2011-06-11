@@ -42,16 +42,25 @@ sub xf_test {
 }
 
 subtest '_desugar_type_array' => sub {
-  note fmt_exception xf_test( [], undef, 'no parameters are bad! <>' );
-  x_test( [ {} ], { name => undef, combining => [] }, 'Hashref is mostly passthrough <HASH>' );
-  x_test( [ [] ], { name => undef, combining => [] }, 'Arrayref is anon-sugar <ARRAY>' );
-  note fmt_exception xf_test( ['example'], undef, 'only name is bad! <_string>' );
-  x_test( [ 'example', [] ], { name => 'example', combining => [] }, '"name, [ ]"  form <_string,ARRAY>' );
-  x_test( [ 'example', {} ], { name => 'example', combining => [] }, '"name, {}"  form <_string,HASH>' );
-  note fmt_exception xf_test( [ [], [] ], { name => 'example', combining => [] }, '"[], []"  is bad <ARRAY,ARRAY>' );
-  note fmt_exception xf_test( [ {}, {} ], { name => 'example', combining => [] }, '"{}, {}"  is bad <HASH,HASH>' );
-  x_test( [ [], {} ], { name => undef, combining => [] }, '"[], {}"  form <ARRAY,HASH>' );
-  x_test( [ 'example', [], {} ], { name => 'example', combining => [] }, '"name,[], {}"  form <_string,ARRAY,HASH>' );
+
+  subtest '_ANON_ ' => sub {
+    x_test( [ {} ], { name => undef, combining => [] }, 'Hashref is mostly passthrough <HASH>' );
+    x_test( [ [] ], { name => undef, combining => [] }, 'Arrayref is anon-sugar <ARRAY>' );
+    x_test( [ [], {} ], { name => undef, combining => [] }, '"[], {}"  form <ARRAY,HASH>' );
+  };
+
+  subtest 'named' => sub {
+    x_test( [ 'example', {} ], { name => 'example', combining => [] }, '"name, {}"  form <_string,HASH>' );
+    x_test( [ 'example', [] ], { name => 'example', combining => [] }, '"name, [ ]"  form <_string,ARRAY>' );
+    x_test( [ 'example', [], {} ], { name => 'example', combining => [] }, '"name,[], {}"  form <_string,ARRAY,HASH>' );
+  };
+
+  subtest 'invalid' => sub {
+    note fmt_exception xf_test( [],          undef, 'no parameters are bad! <>' );
+    note fmt_exception xf_test( ['example'], undef, 'only name is bad! <_string>' );
+    note fmt_exception xf_test( [ [], [] ], { name => 'example', combining => [] }, '"[], []"  is bad <ARRAY,ARRAY>' );
+    note fmt_exception xf_test( [ {}, {} ], { name => 'example', combining => [] }, '"{}, {}"  is bad <HASH,HASH>' );
+  };
 };
 
 done_testing;
