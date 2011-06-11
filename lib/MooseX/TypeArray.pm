@@ -92,8 +92,11 @@ sub _desugar_typearray {
   if ( exists $sugarmap->{$signature} ) {
     return $sugarmap->{$signature}->(@args);
   }
-  require Carp;
-  Carp::confess( 'Unexpected parameters types passed: <' . $signature . '>,' . qq{\n} .  'Expected one from [ ' . ( join q{, }, map { '<' . $_ . '>' } sort keys %{$sugarmap} ) . ' ] ' );
+  __PACKAGE__->_throw_error( 'Unexpected parameters types passed: <'
+      . $signature . '>,' . qq{\n}
+      . 'Expected one from [ '
+      . ( join q{, }, map { '<' . $_ . '>' } sort keys %{$sugarmap} )
+      . ' ] ' );
 }
 
 sub _check_conflict_names {
@@ -103,17 +106,29 @@ sub _check_conflict_names {
   my $type = Moose::Util::TypeConstraints::find_type_constraint($name);
 
   if ( defined $type and $type->_package_defined_in eq $package ) {
-    require Carp;
-    Carp::confess( "The type constraint '$name' has already been created in "
+    __PACKAGE__->_throw_error( "The type constraint '$name' has already been created in "
         . $type->_package_defined_in
         . " and cannot be created again in $package " );
   }
   if ( $name !~ /^[\w:\.]+$/ ) {
-    require Carp;
-    Carp::confess(
+    __PACKAGE__->_throw_error(
       $name . qq{ contains invalid characters for a type name.} . qq{ Names can contain alphanumeric character, ":", and "."\n} );
   }
   return 1;
+}
+
+sub _convert_type_names {
+  my ( $name, @types ) = @_;
+  require Moose::Util::TypeConstraints;
+  my @out;
+  for my $type (@types) {
+    my $translated_type = Moose::Util::TypeConstraints::find_or_parse_type_constraint($type);
+    if ( not $translated_type ) {
+      __PACKAGE__->_throw_error("Could not locate type constraint ($type) for the TypeArray");
+    }
+    push @out, $translated_type;
+  }
+  return @out;
 }
 
 sub typearray {
@@ -122,7 +137,11 @@ sub typearray {
   $config->{package_defined_in} = scalar( caller(0) );
 
   _check_conflict_names( $config->{name}, $config->{package_defined_in} ) if defined $config->{name};
+
+  $config->{combining} = [ _convert_type_names( $config->{name}, @{ $config->{combining} } ) ];
+
   require Moose::Meta::TypeConstraint::TypeArray;
+
   my $constraint = Moose::Meta::TypeConstraint::TypeArray->new( %{$config} );
 
   if ( defined $config->{name} ) {
@@ -132,6 +151,13 @@ sub typearray {
 
   return $constraint;
 
+}
+
+sub _throw_error {
+  shift;
+  require Moose;
+  unshift @_, 'Moose';
+  goto &Moose::throw_error;
 }
 
 1;

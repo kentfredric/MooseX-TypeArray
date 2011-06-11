@@ -12,6 +12,10 @@ my $e = exception {
   Example->new( field => 0 );
 };
 
+my $tc = Example->meta->get_attribute('field')->type_constraint();
+
+note $tc->validate( 0 );
+
 isnt( $e, undef, '0 is not a valid value for a field' );
 isa_ok( $e, 'MooseX::TypeArray::Error' );
 can_ok( $e, 'errors', 'exception instance' );
