@@ -14,16 +14,23 @@ my $e = exception {
 
 my $tc = Example->meta->get_attribute('field')->type_constraint();
 
-note $tc->validate( 0 );
+note $tc->validate(0);
 
 isnt( $e, undef, '0 is not a valid value for a field' );
+
+$e = exception {
+  $tc->assert_valid(0);
+};
+
+note explain $e;
+
 isa_ok( $e, 'MooseX::TypeArray::Error' );
-can_ok( $e, 'errors', 'exception instance' );
+can_ok( $e, 'errors' );
 
 my $errors;
 
 is( exception { $errors = $e->errors }, undef, 'errors doesn\'t error itself' );
-is( ref $errors, 'ARRAY', 'errors is an array' );
+is( ref $errors, 'HASH', 'errors is an hash' );
 
 done_testing;
 
