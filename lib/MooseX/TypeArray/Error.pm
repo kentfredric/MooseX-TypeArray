@@ -13,22 +13,38 @@ use overload '""' => \&get_message;
 
 #with 'StackTrace::Auto';
 
+=attr name
+
+=cut
+
 has 'name' => (
   isa      => 'Str',
   is       => 'rw',
   required => 1,
 );
 
+=attr value
+
+=cut
+
 has 'value' => (
   is       => 'rw',
   required => 1,
 );
+
+=attr errors
+
+=cut
 
 has 'errors' => (
   isa      => 'HashRef',
   is       => 'rw',
   required => 1,
 );
+
+=attr message
+
+=cut
 
 has 'message' => (
   isa       => 'CodeRef',
@@ -37,6 +53,10 @@ has 'message' => (
   traits    => ['Code'],
   handles   => { '_message' => 'execute', },
 );
+
+=p_attr _stack_trace
+
+=cut
 
 has '_stack_trace' => (
   is       => 'ro',
@@ -51,8 +71,9 @@ has '_stack_trace' => (
 sub _build_stack_trace {
   require Devel::StackTrace;
   my $found_mark = 0;
-  my $uplevel    = 6;
-  my $trace      = Devel::StackTrace->new(
+
+  # my $uplevel    = 6;
+  my $trace = Devel::StackTrace->new(
 
     #    no_refs => 1,
     indent => 1,
@@ -73,6 +94,10 @@ sub _build_stack_trace {
   # this is to hide the guts of the stacktrace if you pass it to a dumper. Its far too bloaty.
   return sub { $trace };
 }
+
+=method get_message
+
+=cut
 
 sub get_message {
   my ($self) = @_;
@@ -102,14 +127,18 @@ sub get_message {
   push @lines, q{ -- };
   for my $suberror ( sort keys %{ $self->errors } ) {
     $index++;
-    my $errorstr = "" . $self->errors->{$suberror};
-    push @lines, ' ' . $index . '. ' . $suberror . ': ';
-    push @lines, map { s/^/    /; $_ } split /\n/, $errorstr;
+    my $errorstr = q{} . $self->errors->{$suberror};
+    push @lines, sprintf q{ %s. %s: }, $index, $suberror;
+    ## no critic ( ProhibitComplexMappings )
+    push @lines, map { ( my $x = $_ ) =~ s/\A/    /msx; $x } split /\n/msx, $errorstr;
   }
   push @lines, q{ -- };
   push @lines, $self->stack_trace->as_string;
   return join qq{\n}, @lines;
 }
+
+no Moose;
+__PACKAGE__->meta->make_immutable;
 
 1;
 

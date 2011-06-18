@@ -5,6 +5,23 @@ package MooseX::TypeArray;
 
 # ABSTRACT: Create composite types where all subtypes must be satisfied
 
+=head1 DESCRIPTION
+
+This type constraint is much like the "Union" type constraint, except the union
+type constraint validates when any of its members are valid. This type
+constraint requires B<ALL> of its members to be valid.
+
+This type constraint also returns an Object with a breakdown of the composite
+failed constraints on error, which you should be able to use if you work with
+this type constraint directly.
+
+Alas, Moose itself currently doesn't support propagation of objects as
+validation methods, so you will only get the stringified version of this object
+until that is solved.
+
+Alternatively, you can use L<MooseX::Attribute::ValidateWithException> until
+Moose natively supports exceptions.
+
 =head1 SYNOPSIS
 
   {
@@ -92,7 +109,7 @@ sub _desugar_typearray {
   if ( exists $sugarmap->{$signature} ) {
     return $sugarmap->{$signature}->(@args);
   }
-  __PACKAGE__->_throw_error( 'Unexpected parameters types passed: <'
+  return __PACKAGE__->_throw_error( 'Unexpected parameters types passed: <'
       . $signature . '>,' . qq{\n}
       . 'Expected one from [ '
       . ( join q{, }, map { '<' . $_ . '>' } sort keys %{$sugarmap} )
@@ -110,9 +127,10 @@ sub _check_conflict_names {
         . $type->_package_defined_in
         . " and cannot be created again in $package " );
   }
-  if ( $name !~ /^[\w:\.]+$/ ) {
+  if ( $name !~ /\A[[:word:]:.]+\z/sxm ) {
     __PACKAGE__->_throw_error(
-      $name . qq{ contains invalid characters for a type name.} . qq{ Names can contain alphanumeric character, ":", and "."\n} );
+      sprintf q{%s contains invalid characters for a type name. Names can contain alphanumeric character, ":", and "."%s},
+      $name, qq{\n} );
   }
   return 1;
 }
@@ -131,10 +149,57 @@ sub _convert_type_names {
   return @out;
 }
 
+## no critic ( RequireArgUnpacking )
+
+=function typearray
+
+This function has 2 forms, anonymous and named.
+
+=function typearray $NAME, \@CONSTRAINTS
+
+  typearray 'foo', [ 'SubTypeA', 'SubTypeB' ];
+  # the same as
+  typearray { name => 'foo', combining =>  [ 'SubTypeA', 'SubTypeB' ] };
+
+=function typearray $NAME, \@CONSTRAINTS, \%CONFIG
+
+  typearray 'foo', [ 'SubTypeA', 'SubTypeB' ], { blah => "blah" };
+  # the same as
+  typearray { name => 'foo', combining =>  [ 'SubTypeA', 'SubTypeB' ], blah => "blah" };
+
+=function typearray $NAME, \%CONFIG
+
+  typearray 'foo', { blah => "blah" };
+  # the same as
+  typearray { name => 'foo', blah => "blah" };
+
+=function typearray \@CONSTRAINTS
+
+  typearray [ 'SubTypeA', 'SubTypeB' ];
+  # the same as
+  typearray { combining =>  [ 'SubTypeA', 'SubTypeB' ]  };
+
+=function typearray \@CONSTRAINTS, \%CONFIG
+
+  typearray [ 'SubTypeA', 'SubTypeB' ], { blah => "blah};
+  # the same as
+  typearray { combining =>  [ 'SubTypeA', 'SubTypeB' ] , blah => "blah" };
+
+=function typearray \%CONFIG
+
+  typearray {
+    name      =>  $name   # the name of the type ( ie: 'MyType' or 'NaturalBigInt' )
+    combining => $arrayref # the subtypes which must be satisfied for this constraint
+  };
+
+No other keys are recognised at this time.
+
+=cut
+
 sub typearray {
   my $config = _desugar_typearray(@_);
 
-  $config->{package_defined_in} = scalar( caller(0) );
+  $config->{package_defined_in} = scalar caller 0;
 
   _check_conflict_names( $config->{name}, $config->{package_defined_in} ) if defined $config->{name};
 
@@ -153,6 +218,7 @@ sub typearray {
 
 }
 
+## no critic ( RequireArgUnpacking )
 sub _throw_error {
   shift;
   require Moose;
