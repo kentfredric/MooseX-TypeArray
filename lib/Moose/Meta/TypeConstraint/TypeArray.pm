@@ -25,35 +25,33 @@ __PACKAGE__->meta->add_attribute(
   )
 );
 
-__PACKAGE__->meta->add_attribute('_default_message' => (
-    accessor  => '_default_message',
-));
-
+__PACKAGE__->meta->add_attribute( '_default_message' => ( accessor => '_default_message', ) );
 
 my $_default_message_generator = sub {
-  my $name = shift;
+  my $name        = shift;
   my @constraints = @{ shift(@_) };
   return sub {
     my $value = shift;
     require MooseX::TypeArray::Error;
     my %errors = ();
-    for my $type ( @constraints ){
-      if( my $error = $type->validate( $value ) ){ 
+    for my $type (@constraints) {
+      if ( my $error = $type->validate($value) ) {
         $errors{ $type->name } = $error;
       }
     }
-    return MooseX::TypeArray::Error->new( 
-      name => $name,
-      value => $value,
+    return MooseX::TypeArray::Error->new(
+      name   => $name,
+      value  => $value,
       errors => \%errors,
     );
   };
 };
+
 sub get_message {
-    my ($self, $value) = @_;
-    my $msg = $self->message || $self->_default_message;
-    local $_ = $value;
-    return $msg->($value);
+  my ( $self, $value ) = @_;
+  my $msg = $self->message || $self->_default_message;
+  local $_ = $value;
+  return $msg->($value);
 }
 
 sub new {
@@ -71,36 +69,30 @@ sub new {
 
     %options,
   );
-  $self->_default_message( $_default_message_generator->( $self->name , $self->combined_constraints ) )
+  $self->_default_message( $_default_message_generator->( $self->name, $self->combined_constraints ) )
     unless $self->has_message;
 
   return $self;
 }
 
 sub _actually_compile_type_constraint {
-  my $self = shift;
+  my $self        = shift;
   my @constraints = @{ $self->combined_constraints };
   return sub {
     my $value = shift;
-    foreach my $type ( @constraints ) {
+    foreach my $type (@constraints) {
       return undef if not $type->check($value);
     }
     return 1;
   };
 }
 
-
-
 sub validate {
   my ( $self, $value ) = @_;
-  my @errors;
   foreach my $type ( @{ $self->combined_constraints } ) {
-    return $self->get_message( $value ) if defined $type->validate( $value );
-    my $err = $type->validate($value);
-    push @errors, $err if defined $err;
+    return $self->get_message($value) if defined $type->validate($value);
   }
-  return undef unless @errors;
-  return '[ ' . ( join ',', @errors ) . ' ]';
+  return undef;
 }
 
 1;

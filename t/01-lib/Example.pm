@@ -5,6 +5,7 @@ use warnings;
 package Example;
 use Moose;
 use Example::TypeLib;
+use MooseX::Attribute::ValidateWithException;
 
 has field => (
   isa      => 'NaturalAndBiggerThanTen',
