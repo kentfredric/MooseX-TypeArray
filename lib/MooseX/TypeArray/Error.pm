@@ -3,6 +3,8 @@ use warnings;
 
 package MooseX::TypeArray::Error;
 
+# ABSTRACT: Information container for validation failures from MooseX::TypeArrays' constraints
+
 use Moose;
 use Try::Tiny;
 

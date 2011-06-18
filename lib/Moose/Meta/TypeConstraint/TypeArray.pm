@@ -4,6 +4,8 @@ use warnings;
 
 package Moose::Meta::TypeConstraint::TypeArray;
 
+# ABSTRACT: Moose 'TypeArray' Base type constraint type.
+
 use metaclass;
 
 # use Moose::Meta::TypeCoercion::TypeArray;
