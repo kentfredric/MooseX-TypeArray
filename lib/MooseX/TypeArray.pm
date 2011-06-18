@@ -2,85 +2,12 @@ use strict;
 use warnings;
 
 package MooseX::TypeArray;
+BEGIN {
+  $MooseX::TypeArray::VERSION = '0.1.0';
+}
 
 # ABSTRACT: Create composite types where all subtypes must be satisfied
 
-=head1 DESCRIPTION
-
-This type constraint is much like the "Union" type constraint, except the union
-type constraint validates when any of its members are valid. This type
-constraint requires B<ALL> of its members to be valid.
-
-This type constraint also returns an Object with a breakdown of the composite
-failed constraints on error, which you should be able to use if you work with
-this type constraint directly.
-
-Alas, Moose itself currently doesn't support propagation of objects as
-validation methods, so you will only get the stringified version of this object
-until that is solved.
-
-Alternatively, you can use L<MooseX::Attribute::ValidateWithException> until
-Moose natively supports exceptions.
-
-=head1 SYNOPSIS
-
-  {
-    package #
-      Foo;
-    use Moose::Util::TypeConstraint;
-    use MooseX::TypeArray;
-    subtype 'Natural',
-      as 'Int',
-      where { $_ > 0 };
-      message { "This number ($_) is not bigger then 0" };
-
-    subtype 'BiggerThanTen',
-      as 'Int',
-      where { $_ > 10 },
-      message { "This number ($_) is not bigger than ten!" };
-
-
-    typearray NaturalAndBiggerThanTen => [ 'Natural', 'BiggerThanTen' ];
-
-    # or this , which is the same thing.
-
-    typearray NaturalAndBiggerThanTen => {
-      combining => [qw( Natural BiggerThanTen )],
-    };
-
-
-    ...
-
-    has field => (
-      isa => 'NaturalAndBiggerThanTen',
-      ...
-    );
-
-    ...
-  }
-  use Try::Tiny;
-  use Data::Dumper qw( Dumper );
-
-  try {
-    Foo->new( field => 0 );
-  } catch {
-    print Dumper( $_ );
-    #
-    # bless({  errors => {
-    #   Natural => "This number (0) is not bigger then 0",
-    #   BiggerThanTen => "This number (0) is not bigger than ten!"
-    # }}, 'MooseX::TypeArray::Error' );
-    #
-    print $_;
-
-    # Validation failed for TypeArray NaturalAndBiggerThanTen with value "0" :
-    #   1. Validation failed for Natural:
-    #       This number (0) is not bigger than 0
-    #   2. Validation failed for BiggerThanTen:
-    #       This number (0) is not bigger than ten!
-    #
-  }
-=cut
 
 use Sub::Exporter -setup => {
   exports => [qw( typearray )],
@@ -151,50 +78,6 @@ sub _convert_type_names {
 
 ## no critic ( RequireArgUnpacking )
 
-=function typearray
-
-This function has 2 forms, anonymous and named.
-
-=function typearray $NAME, \@CONSTRAINTS
-
-  typearray 'foo', [ 'SubTypeA', 'SubTypeB' ];
-  # the same as
-  typearray { name => 'foo', combining =>  [ 'SubTypeA', 'SubTypeB' ] };
-
-=function typearray $NAME, \@CONSTRAINTS, \%CONFIG
-
-  typearray 'foo', [ 'SubTypeA', 'SubTypeB' ], { blah => "blah" };
-  # the same as
-  typearray { name => 'foo', combining =>  [ 'SubTypeA', 'SubTypeB' ], blah => "blah" };
-
-=function typearray $NAME, \%CONFIG
-
-  typearray 'foo', { blah => "blah" };
-  # the same as
-  typearray { name => 'foo', blah => "blah" };
-
-=function typearray \@CONSTRAINTS
-
-  typearray [ 'SubTypeA', 'SubTypeB' ];
-  # the same as
-  typearray { combining =>  [ 'SubTypeA', 'SubTypeB' ]  };
-
-=function typearray \@CONSTRAINTS, \%CONFIG
-
-  typearray [ 'SubTypeA', 'SubTypeB' ], { blah => "blah};
-  # the same as
-  typearray { combining =>  [ 'SubTypeA', 'SubTypeB' ] , blah => "blah" };
-
-=function typearray \%CONFIG
-
-  typearray {
-    name      =>  $name   # the name of the type ( ie: 'MyType' or 'NaturalBigInt' )
-    combining => $arrayref # the subtypes which must be satisfied for this constraint
-  };
-
-No other keys are recognised at this time.
-
-=cut
 
 sub typearray {
   my $config = _desugar_typearray(@_);
@@ -227,3 +110,149 @@ sub _throw_error {
 }
 
 1;
+
+__END__
+=pod
+
+=head1 NAME
+
+MooseX::TypeArray - Create composite types where all subtypes must be satisfied
+
+=head1 VERSION
+
+version 0.1.0
+
+=head1 SYNOPSIS
+
+  {
+    package #
+      Foo;
+    use Moose::Util::TypeConstraint;
+    use MooseX::TypeArray;
+    subtype 'Natural',
+      as 'Int',
+      where { $_ > 0 };
+      message { "This number ($_) is not bigger then 0" };
+
+    subtype 'BiggerThanTen',
+      as 'Int',
+      where { $_ > 10 },
+      message { "This number ($_) is not bigger than ten!" };
+
+
+    typearray NaturalAndBiggerThanTen => [ 'Natural', 'BiggerThanTen' ];
+
+    # or this , which is the same thing.
+
+    typearray NaturalAndBiggerThanTen => {
+      combining => [qw( Natural BiggerThanTen )],
+    };
+
+
+    ...
+
+    has field => (
+      isa => 'NaturalAndBiggerThanTen',
+      ...
+    );
+
+    ...
+  }
+  use Try::Tiny;
+  use Data::Dumper qw( Dumper );
+
+  try {
+    Foo->new( field => 0 );
+  } catch {
+    print Dumper( $_ );
+    #
+    # bless({  errors => {
+    #   Natural => "This number (0) is not bigger then 0",
+    #   BiggerThanTen => "This number (0) is not bigger than ten!"
+    # }}, 'MooseX::TypeArray::Error' );
+    #
+    print $_;
+
+    # Validation failed for TypeArray NaturalAndBiggerThanTen with value "0" :
+    #   1. Validation failed for Natural:
+    #       This number (0) is not bigger than 0
+    #   2. Validation failed for BiggerThanTen:
+    #       This number (0) is not bigger than ten!
+    #
+  }
+
+=head1 DESCRIPTION
+
+This type constraint is much like the "Union" type constraint, except the union
+type constraint validates when any of its members are valid. This type
+constraint requires B<ALL> of its members to be valid.
+
+This type constraint also returns an Object with a breakdown of the composite
+failed constraints on error, which you should be able to use if you work with
+this type constraint directly.
+
+Alas, Moose itself currently doesn't support propagation of objects as
+validation methods, so you will only get the stringified version of this object
+until that is solved.
+
+Alternatively, you can use L<MooseX::Attribute::ValidateWithException> until
+Moose natively supports exceptions.
+
+=head1 FUNCTIONS
+
+=head2 typearray
+
+This function has 2 forms, anonymous and named.
+
+=head2 typearray $NAME, \@CONSTRAINTS
+
+  typearray 'foo', [ 'SubTypeA', 'SubTypeB' ];
+  # the same as
+  typearray { name => 'foo', combining =>  [ 'SubTypeA', 'SubTypeB' ] };
+
+=head2 typearray $NAME, \@CONSTRAINTS, \%CONFIG
+
+  typearray 'foo', [ 'SubTypeA', 'SubTypeB' ], { blah => "blah" };
+  # the same as
+  typearray { name => 'foo', combining =>  [ 'SubTypeA', 'SubTypeB' ], blah => "blah" };
+
+=head2 typearray $NAME, \%CONFIG
+
+  typearray 'foo', { blah => "blah" };
+  # the same as
+  typearray { name => 'foo', blah => "blah" };
+
+=head2 typearray \@CONSTRAINTS
+
+  typearray [ 'SubTypeA', 'SubTypeB' ];
+  # the same as
+  typearray { combining =>  [ 'SubTypeA', 'SubTypeB' ]  };
+
+=head2 typearray \@CONSTRAINTS, \%CONFIG
+
+  typearray [ 'SubTypeA', 'SubTypeB' ], { blah => "blah};
+  # the same as
+  typearray { combining =>  [ 'SubTypeA', 'SubTypeB' ] , blah => "blah" };
+
+=head2 typearray \%CONFIG
+
+  typearray {
+    name      =>  $name   # the name of the type ( ie: 'MyType' or 'NaturalBigInt' )
+    combining => $arrayref # the subtypes which must be satisfied for this constraint
+  };
+
+No other keys are recognised at this time.
+
+=head1 AUTHOR
+
+Kent Fredric <kentnl@cpan.org>
+
+=head1 COPYRIGHT AND LICENSE
+
+This software is copyright (c) 2011 by Kent Fredric <kentnl@cpan.org>.
+
+This is free software; you can redistribute it and/or modify it under
+the same terms as the Perl 5 programming language system itself.
+
+=cut
+

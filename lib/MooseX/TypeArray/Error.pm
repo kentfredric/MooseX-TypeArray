@@ -2,6 +2,9 @@ use strict;
 use warnings;
 
 package MooseX::TypeArray::Error;
+BEGIN {
+  $MooseX::TypeArray::Error::VERSION = '0.1.0';
+}
 
 # ABSTRACT: Information container for validation failures from MooseX::TypeArrays' constraints
 
@@ -13,9 +16,6 @@ use overload '""' => \&get_message;
 
 #with 'StackTrace::Auto';
 
-=attr name
-
-=cut
 
 has 'name' => (
   isa      => 'Str',
@@ -23,18 +23,12 @@ has 'name' => (
   required => 1,
 );
 
-=attr value
-
-=cut
 
 has 'value' => (
   is       => 'rw',
   required => 1,
 );
 
-=attr errors
-
-=cut
 
 has 'errors' => (
   isa      => 'HashRef',
@@ -42,9 +36,6 @@ has 'errors' => (
   required => 1,
 );
 
-=attr message
-
-=cut
 
 has 'message' => (
   isa       => 'CodeRef',
@@ -54,9 +45,6 @@ has 'message' => (
   handles   => { '_message' => 'execute', },
 );
 
-=p_attr _stack_trace
-
-=cut
 
 has '_stack_trace' => (
   is       => 'ro',
@@ -95,9 +83,6 @@ sub _build_stack_trace {
   return sub { $trace };
 }
 
-=method get_message
-
-=cut
 
 sub get_message {
   my ($self) = @_;
@@ -141,4 +126,47 @@ no Moose;
 __PACKAGE__->meta->make_immutable;
 
 1;
+
+
+__END__
+=pod
+
+=head1 NAME
+
+MooseX::TypeArray::Error - Information container for validation failures from MooseX::TypeArrays' constraints
+
+=head1 VERSION
+
+version 0.1.0
+
+=head1 METHODS
+
+=head2 get_message
+
+=head1 ATTRIBUTES
+
+=head2 name
+
+=head2 value
+
+=head2 errors
+
+=head2 message
+
+=head1 PRIVATE ATTRIBUTES
+
+=head2 _stack_trace
+
+=head1 AUTHOR
+
+Kent Fredric <kentnl@cpan.org>
+
+=head1 COPYRIGHT AND LICENSE
+
+This software is copyright (c) 2011 by Kent Fredric <kentnl@cpan.org>.
+
+This is free software; you can redistribute it and/or modify it under
+the same terms as the Perl 5 programming language system itself.
+
+=cut
 

@@ -3,6 +3,9 @@ use strict;
 use warnings;
 
 package Moose::Meta::TypeConstraint::TypeArray;
+BEGIN {
+  $Moose::Meta::TypeConstraint::TypeArray::VERSION = '0.1.0';
+}
 
 # ABSTRACT: Moose 'TypeArray' Base type constraint type.
 
@@ -95,3 +98,28 @@ sub validate {
 }
 
 1;
+
+__END__
+=pod
+
+=head1 NAME
+
+Moose::Meta::TypeConstraint::TypeArray - Moose 'TypeArray' Base type constraint type.
+
+=head1 VERSION
+
+version 0.1.0
+
+=head1 AUTHOR
+
+Kent Fredric <kentnl@cpan.org>
+
+=head1 COPYRIGHT AND LICENSE
+
+This software is copyright (c) 2011 by Kent Fredric <kentnl@cpan.org>.
+
+This is free software; you can redistribute it and/or modify it under
+the same terms as the Perl 5 programming language system itself.
+
+=cut
+
