@@ -37,11 +37,26 @@ if ( env_is( 'TRAVIS_BRANCH', 'master' ) ) {
     cpanm( @params, split /\n/, $stdout );
   }
   $stdout = capture_stdout {
-    safe_exec( 'dzil', 'listdeps', '--missing' );
+    safe_exec( 'dzil', 'listdeps', '--author', '--version', '--missing' );
   };
 
   if ( $stdout !~ /^\s*$/msx ) {
-    cpanm( @params, split /\n/, $stdout );
+    my @deps = split /\n/, $stdout;
+    my @parsedeps;
+
+    for my $dep ( split /\n/, $stdout ) {
+      if ( $dep =~ /^(.+?)\s+=\s+(.*$)/ ) {
+        my ( $module, $version ) = $1, $2;
+        if ( $version =~ /^\s*0\s*$/ ) {
+          push @parsedeps, $module;
+        }
+        if ( $version =~ /^v?[0-9._]+/ ) {
+          push @parsedeps, "$module~>=$version";
+        }
+        push @parsedeps, "$module~$version";
+      }
+    }
+    cpanm( @params, @parsedeps );
   }
 }
 else {
