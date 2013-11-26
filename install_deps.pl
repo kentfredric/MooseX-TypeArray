@@ -46,7 +46,7 @@ if ( env_is( 'TRAVIS_BRANCH', 'master' ) ) {
     for my $dep ( split /\n/, $stdout ) {
       diag("Missing: \e[31m$dep\e[0m");
       if ( $dep =~ /^\s*([^=\s]+)\s*=\s*(.*$)/ ) {
-        my ( $module, $version ) = $1, $2;
+        my ( $module, $version ) = ( $1, $2 );
         diag("Module: \e[31m$module\e[0m -> \e[32m$version\e[0m");
         if ( $version =~ /^\s*0\s*$/ ) {
           push @parsedeps, $module;
