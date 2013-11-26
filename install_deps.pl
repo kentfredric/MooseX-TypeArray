@@ -50,9 +50,11 @@ if ( env_is( 'TRAVIS_BRANCH', 'master' ) ) {
         diag("Module: \e[31m$module\e[0m -> \e[32m$version\e[0m");
         if ( $version =~ /^\s*0\s*$/ ) {
           push @parsedeps, $module;
+          next;
         }
         if ( $version =~ /^v?[0-9._]+/ ) {
           push @parsedeps, "$module~>=$version";
+          next;
         }
         push @parsedeps, "$module~$version";
       }
