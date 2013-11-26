@@ -1,5 +1,9 @@
 language: perl
 matrix:
+  allow_failures:
+    - perl: "5.8"
+    - env: STERILIZE_ENV=0 RELEASE_TESTING=1 AUTHOR_TESTING=1
+    - env: STERILIZE_ENV=0 DEVELOPER_DEPS=1
   include:
     - perl: "5.8"
       env:  STERILIZE_ENV=0
