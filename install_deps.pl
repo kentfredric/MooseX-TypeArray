@@ -37,14 +37,14 @@ if ( env_is( 'TRAVIS_BRANCH', 'master' ) ) {
     cpanm( @params, split /\n/, $stdout );
   }
   $stdout = capture_stdout {
-    safe_exec( 'dzil', 'listdeps', '--author', '--version', '--missing' );
+    safe_exec( 'dzil', 'listdeps', '--author', '--versions', '--missing' );
   };
 
   if ( $stdout !~ /^\s*$/msx ) {
     my @deps = split /\n/, $stdout;
     my @parsedeps;
-
     for my $dep ( split /\n/, $stdout ) {
+      diag("Missing: \e[31m$dep\e[0m");
       if ( $dep =~ /^(.+?)\s+=\s+(.*$)/ ) {
         my ( $module, $version ) = $1, $2;
         if ( $version =~ /^\s*0\s*$/ ) {
