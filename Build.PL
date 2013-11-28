@@ -25,7 +25,7 @@ my %module_build_args = (
   "requires" => {
     "Devel::StackTrace" => 0,
     "Module::Runtime" => 0,
-    "Moose" => 0,
+    "Moose" => "2.1100",
     "Moose::Meta::TypeConstraint" => 0,
     "Moose::Util::TypeConstraints" => 0,
     "Sub::Exporter" => 0,
@@ -39,7 +39,7 @@ my %module_build_args = (
   },
   "script_files" => [],
   "test_requires" => {
-    "MooseX::Attribute::ValidateWithException" => 0,
+    "Moose" => "2.1100",
     "Test::Fatal" => 0,
     "Test::More" => "1.001002",
     "lib" => 0
@@ -49,7 +49,7 @@ my %module_build_args = (
 
 my %fallback_build_requires = (
   "Module::Build" => "0.4203",
-  "MooseX::Attribute::ValidateWithException" => 0,
+  "Moose" => "2.1100",
   "Test::Fatal" => 0,
   "Test::More" => "1.001002",
   "lib" => 0

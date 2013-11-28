@@ -85,7 +85,7 @@
          "requires" : {
             "Devel::StackTrace" : "0",
             "Module::Runtime" : "0",
-            "Moose" : "0",
+            "Moose" : "2.1100",
             "Moose::Meta::TypeConstraint" : "0",
             "Moose::Util::TypeConstraints" : "0",
             "Sub::Exporter" : "0",
@@ -100,7 +100,7 @@
       },
       "test" : {
          "requires" : {
-            "MooseX::Attribute::ValidateWithException" : "0",
+            "Moose" : "2.1100",
             "Test::Fatal" : "0",
             "Test::More" : "1.001002",
             "lib" : "0"
@@ -135,9 +135,6 @@
    },
    "version" : "0.1.1",
    "x_BuiltWith" : {
-      "failures" : {
-         "MooseX::Attribute::ValidateWithException" : "module was not found in INC"
-      },
       "modules" : {
          "Devel::StackTrace" : "1.30",
          "Dist::Zilla::Plugin::Author::KENTNL::MinimumPerl" : "2.004001",
