@@ -3,9 +3,8 @@ use strict;
 use warnings;
 
 package Example;
-use Moose;
+use Moose 2.1100;
 use Example::TypeLib;
-use MooseX::Attribute::ValidateWithException;
 
 has field => (
   isa      => 'NaturalAndBiggerThanTen',

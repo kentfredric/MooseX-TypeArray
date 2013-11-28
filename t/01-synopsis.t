@@ -22,7 +22,6 @@ note "!--";
 note explain $e;
 note "!--";
 isnt( $e, undef, '0 is not a valid value for a field' );
-
 #$e = exception {
 #  $tc->assert_valid(0);
 #};

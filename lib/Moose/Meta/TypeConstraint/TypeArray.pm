@@ -49,7 +49,7 @@ my $_default_message_generator = sub {
         $errors{ $type->name } = $error;
       }
     }
-    return MooseX::TypeArray::Error->new(
+    die MooseX::TypeArray::Error->new(
       name   => $name,
       value  => $value,
       errors => \%errors,
