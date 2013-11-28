@@ -134,6 +134,8 @@ __END__
 
 =pod
 
+=encoding UTF-8
+
 =head1 NAME
 
 MooseX::TypeArray::Error - Information container for validation failures from MooseX::TypeArrays' constraints

@@ -118,6 +118,8 @@ __END__
 
 =pod
 
+=encoding UTF-8
+
 =head1 NAME
 
 MooseX::TypeArray - Create composite types where all subtypes must be satisfied

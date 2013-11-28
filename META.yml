@@ -38,7 +38,7 @@ requires:
   metaclass: 0
   overload: 0
   parent: 0
-  perl: v5.10.0
+  perl: 5.006
   strict: 0
   warnings: 0
 resources:
@@ -273,6 +273,10 @@ x_Dist_Zilla:
             -
               class: Pod::Weaver::Plugin::H1Nester
               name: '@CorePrep/H1Nester'
+              version: 4.004
+            -
+              class: Pod::Weaver::Plugin::SingleEncoding
+              name: '-SingleEncoding'
               version: 4.004
             -
               class: Pod::Weaver::Section::Name

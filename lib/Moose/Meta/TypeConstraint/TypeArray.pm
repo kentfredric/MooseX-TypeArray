@@ -113,6 +113,8 @@ __END__
 
 =pod
 
+=encoding UTF-8
+
 =head1 NAME
 
 Moose::Meta::TypeConstraint::TypeArray - Moose 'TypeArray' Base type constraint type.
