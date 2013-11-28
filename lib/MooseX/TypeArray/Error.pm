@@ -8,7 +8,7 @@ package MooseX::TypeArray::Error;
 use Moose;
 use Try::Tiny;
 
-#use Class::Load;
+use Module::Runtime;
 use overload '""' => \&get_message;
 
 #with 'StackTrace::Auto';
@@ -113,7 +113,7 @@ sub get_message {
   my $can_partialdump = try {
 
     # versions prior to 0.14 had a potential infinite loop bug
-    Class::MOP::load_class( 'Devel::PartialDump', { -version => 0.14 } );
+    Module::Runtime::use_module( 'Devel::PartialDump', 0.14 );
     1;
   };
   if ($can_partialdump) {
