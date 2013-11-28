@@ -17,6 +17,7 @@ __PACKAGE__->meta->add_attribute(
   'combining' => (
     accessor => 'combined_constraints',
     default  => sub { [] },
+    Class::MOP::_definition_context(),
   )
 );
 
@@ -24,10 +25,16 @@ __PACKAGE__->meta->add_attribute(
   'internal_name' => (
     accessor => 'internal_name',
     default  => sub { [] },
+    Class::MOP::_definition_context(),
   )
 );
 
-__PACKAGE__->meta->add_attribute( '_default_message' => ( accessor => '_default_message', ) );
+__PACKAGE__->meta->add_attribute(
+  '_default_message' => (
+    accessor => '_default_message',
+    Class::MOP::_definition_context(),
+  )
+);
 
 my $_default_message_generator = sub {
   my ( $name, $constraints_ ) = @_;
