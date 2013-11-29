@@ -4,7 +4,7 @@ MooseX::TypeArray - Create composite types where all subtypes must be satisfied
 
 # VERSION
 
-version 0.1.1
+version 0.2.0
 
 # SYNOPSIS
 
