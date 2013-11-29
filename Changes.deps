@@ -1,0 +1,28 @@
+0.2.0
+ [Added / runtime requires]
+ - Module::Runtime
+ - perl 5.006
+ - strict
+ - warnings
+
+ [Added / test requires]
+ - Moose 2.1100
+ - lib
+
+ [Changed / build requires]
+ - Module::Build 0.3601 → 0.4203
+
+ [Changed / configure requires]
+ - Module::Build 0.3601 → 0.4203
+
+ [Changed / runtime requires]
+ - Moose 0 → 2.1100
+
+ [Changed / test requires]
+ - Test::More 0.88 → 1.001002
+
+ [Removed / test requires]
+ - English
+ - File::Find
+ - File::Temp
+
