@@ -1,11 +1,16 @@
 Release history for MooseX-TypeArray
 
-0.1.1 2013-11-28T17:21:04Z
+0.1.1 2013-11-29T09:57:04Z
  [00 Major]
  - Moose >2.1100 compat
  - This class is mostly redundant and the same as Union
  - But it serves to help me understand Moose TC's and get them working with
    exceptions one day.
+
+ [Dependencies::Noteworthy]
+ - use Module::Build 0.4203
+ - use Moose 2.1100
+ - use Test::More 1.001002
 
  [Dependencies::Stats]
  - Dependencies changed, see Changes.deps{,.all,.dev} for details
