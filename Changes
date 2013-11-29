@@ -1,5 +1,45 @@
 Release history for MooseX-TypeArray
 
+0.2.0 2013-11-29T10:12:00Z
+ [00 Major]
+ - Moose >2.1100 compat
+ - This class is mostly redundant and the same as Union
+ - But it serves to help me understand Moose TC's and get them working with
+   exceptions one day.
+
+ [Dependencies::Noteworthy]
+ - use Module::Build 0.4203
+ - use Moose 2.1100
+ - use Test::More 1.001002
+
+ [Dependencies::Stats]
+ - Dependencies changed, see Changes.deps{,.all,.dev} for details
+ - build: ↑1
+ - configure: ↑1
+ - develop: +51 -3
+ - runtime: +4 ↑1
+ - test: +2 ↑1 -3
+
+ [Documentation]
+ - License address updated
+ - 2013 ©
+
+ [Internals]
+ - Now declares $AUTHORITY
+ - Now calls Class::MOP for definition context
+
+ [Meta]
+ - Bugtracker to github
+ - use x_authority
+
+ [Packaging]
+ - use test_requires in Build.PL
+
+ [Tests]
+ - use Test::Compile::PerFile
+ - Move author tests to xt/
+ - newer ReportVersions::Tiny doesn't report develop deps.
+
 0.1.0 2011-06-18T22:28:25Z
  - First version.
 

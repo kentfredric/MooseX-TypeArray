@@ -3,7 +3,10 @@ use warnings;
 
 package MooseX::TypeArray;
 BEGIN {
-  $MooseX::TypeArray::VERSION = '0.1.0';
+  $MooseX::TypeArray::AUTHORITY = 'cpan:KENTNL';
+}
+{
+  $MooseX::TypeArray::VERSION = '0.2.0'; # TRIAL
 }
 
 # ABSTRACT: Create composite types where all subtypes must be satisfied
@@ -112,7 +115,10 @@ sub _throw_error {
 1;
 
 __END__
+
 =pod
+
+=encoding UTF-8
 
 =head1 NAME
 
@@ -120,7 +126,7 @@ MooseX::TypeArray - Create composite types where all subtypes must be satisfied
 
 =head1 VERSION
 
-version 0.1.0
+version 0.2.0
 
 =head1 SYNOPSIS
 
@@ -249,10 +255,9 @@ Kent Fredric <kentnl@cpan.org>
 
 =head1 COPYRIGHT AND LICENSE
 
-This software is copyright (c) 2011 by Kent Fredric <kentnl@cpan.org>.
+This software is copyright (c) 2013 by Kent Fredric <kentnl@cpan.org>.
 
 This is free software; you can redistribute it and/or modify it under
 the same terms as the Perl 5 programming language system itself.
 
 =cut
-

@@ -4,7 +4,10 @@ use warnings;
 
 package Moose::Meta::TypeConstraint::TypeArray;
 BEGIN {
-  $Moose::Meta::TypeConstraint::TypeArray::VERSION = '0.1.0';
+  $Moose::Meta::TypeConstraint::TypeArray::AUTHORITY = 'cpan:KENTNL';
+}
+{
+  $Moose::Meta::TypeConstraint::TypeArray::VERSION = '0.2.0'; # TRIAL
 }
 
 # ABSTRACT: Moose 'TypeArray' Base type constraint type.
@@ -20,6 +23,7 @@ __PACKAGE__->meta->add_attribute(
   'combining' => (
     accessor => 'combined_constraints',
     default  => sub { [] },
+    Class::MOP::_definition_context(),
   )
 );
 
@@ -27,10 +31,16 @@ __PACKAGE__->meta->add_attribute(
   'internal_name' => (
     accessor => 'internal_name',
     default  => sub { [] },
+    Class::MOP::_definition_context(),
   )
 );
 
-__PACKAGE__->meta->add_attribute( '_default_message' => ( accessor => '_default_message', ) );
+__PACKAGE__->meta->add_attribute(
+  '_default_message' => (
+    accessor => '_default_message',
+    Class::MOP::_definition_context(),
+  )
+);
 
 my $_default_message_generator = sub {
   my ( $name, $constraints_ ) = @_;
@@ -100,7 +110,10 @@ sub validate {
 1;
 
 __END__
+
 =pod
+
+=encoding UTF-8
 
 =head1 NAME
 
@@ -108,7 +121,7 @@ Moose::Meta::TypeConstraint::TypeArray - Moose 'TypeArray' Base type constraint 
 
 =head1 VERSION
 
-version 0.1.0
+version 0.2.0
 
 =head1 AUTHOR
 
@@ -116,10 +129,9 @@ Kent Fredric <kentnl@cpan.org>
 
 =head1 COPYRIGHT AND LICENSE
 
-This software is copyright (c) 2011 by Kent Fredric <kentnl@cpan.org>.
+This software is copyright (c) 2013 by Kent Fredric <kentnl@cpan.org>.
 
 This is free software; you can redistribute it and/or modify it under
 the same terms as the Perl 5 programming language system itself.
 
 =cut
-

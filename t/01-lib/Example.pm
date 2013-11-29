@@ -3,9 +3,9 @@ use strict;
 use warnings;
 
 package Example;
-use Moose;
-use Example::TypeLib;
+use Moose 2.1100;
 use MooseX::Attribute::ValidateWithException;
+use Example::TypeLib;
 
 has field => (
   isa      => 'NaturalAndBiggerThanTen',
