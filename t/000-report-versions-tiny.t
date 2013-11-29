@@ -54,6 +54,7 @@ eval { $v .= pmver('Module::Runtime','any version') };
 eval { $v .= pmver('Moose','2.1100') };
 eval { $v .= pmver('Moose::Meta::TypeConstraint','any version') };
 eval { $v .= pmver('Moose::Util::TypeConstraints','any version') };
+eval { $v .= pmver('MooseX::Attribute::ValidateWithException','any version') };
 eval { $v .= pmver('Sub::Exporter','any version') };
 eval { $v .= pmver('Test::Fatal','any version') };
 eval { $v .= pmver('Test::More','1.001002') };

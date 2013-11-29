@@ -6,7 +6,7 @@ BEGIN {
   $MooseX::TypeArray::Error::AUTHORITY = 'cpan:KENTNL';
 }
 {
-  $MooseX::TypeArray::Error::VERSION = '0.1.1';
+  $MooseX::TypeArray::Error::VERSION = '0.2.0'; # TRIAL
 }
 
 # ABSTRACT: Information container for validation failures from MooseX::TypeArrays' constraints
@@ -142,7 +142,7 @@ MooseX::TypeArray::Error - Information container for validation failures from Mo
 
 =head1 VERSION
 
-version 0.1.1
+version 0.2.0
 
 =head1 METHODS
 

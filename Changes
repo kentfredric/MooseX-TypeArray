@@ -1,6 +1,6 @@
 Release history for MooseX-TypeArray
 
-0.1.1 2013-11-29T09:57:04Z
+0.2.0 2013-11-29T10:01:51Z
  [00 Major]
  - Moose >2.1100 compat
  - This class is mostly redundant and the same as Union
@@ -19,6 +19,14 @@ Release history for MooseX-TypeArray
  - develop: +51 -3
  - runtime: +4 ↑1
  - test: +2 ↑1 -4
+
+ [Documentation]
+ - License address updated
+ - © 2013
+
+ [Internals]
+ - Now declares $AUTHORITY
+ - Now calls Class::MOP for definition context
 
 0.1.0 2011-06-18T22:28:25Z
  - First version.

@@ -5,6 +5,7 @@ author:
 build_requires:
   Module::Build: 0.4203
   Moose: 2.1100
+  MooseX::Attribute::ValidateWithException: 0
   Test::Fatal: 0
   Test::More: 1.001002
   lib: 0
@@ -20,13 +21,13 @@ name: MooseX-TypeArray
 provides:
   Moose::Meta::TypeConstraint::TypeArray:
     file: lib/Moose/Meta/TypeConstraint/TypeArray.pm
-    version: v0.1.1
+    version: v0.2.0
   MooseX::TypeArray:
     file: lib/MooseX/TypeArray.pm
-    version: v0.1.1
+    version: v0.2.0
   MooseX::TypeArray::Error:
     file: lib/MooseX/TypeArray/Error.pm
-    version: v0.1.1
+    version: v0.2.0
 requires:
   Devel::StackTrace: 0
   Module::Runtime: 0
@@ -45,7 +46,7 @@ resources:
   bugtracker: https://github.com/kentfredric/MooseX-TypeArray/issues
   homepage: https://github.com/kentfredric/MooseX-TypeArray
   repository: https://github.com/kentfredric/MooseX-TypeArray.git
-version: 0.1.1
+version: 0.2.0
 x_BuiltWith:
   modules:
     Devel::StackTrace: 1.30
@@ -98,6 +99,7 @@ x_BuiltWith:
     Moose: 2.1106
     Moose::Meta::TypeConstraint: 2.1106
     Moose::Util::TypeConstraints: 2.1106
+    MooseX::Attribute::ValidateWithException: 0.3.0
     Pod::Coverage::TrustPod: 0.100003
     Sub::Exporter: 0.987
     Test::CPAN::Changes: 0.26
@@ -507,6 +509,6 @@ x_Dist_Zilla:
   zilla:
     class: Dist::Zilla::Dist::Builder
     config:
-      is_trial: 0
+      is_trial: 1
     version: 5.006
 x_authority: cpan:KENTNL

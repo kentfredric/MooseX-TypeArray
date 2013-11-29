@@ -101,6 +101,7 @@
       "test" : {
          "requires" : {
             "Moose" : "2.1100",
+            "MooseX::Attribute::ValidateWithException" : "0",
             "Test::Fatal" : "0",
             "Test::More" : "1.001002",
             "lib" : "0"
@@ -110,18 +111,18 @@
    "provides" : {
       "Moose::Meta::TypeConstraint::TypeArray" : {
          "file" : "lib/Moose/Meta/TypeConstraint/TypeArray.pm",
-         "version" : "v0.1.1"
+         "version" : "v0.2.0"
       },
       "MooseX::TypeArray" : {
          "file" : "lib/MooseX/TypeArray.pm",
-         "version" : "v0.1.1"
+         "version" : "v0.2.0"
       },
       "MooseX::TypeArray::Error" : {
          "file" : "lib/MooseX/TypeArray/Error.pm",
-         "version" : "v0.1.1"
+         "version" : "v0.2.0"
       }
    },
-   "release_status" : "stable",
+   "release_status" : "testing",
    "resources" : {
       "bugtracker" : {
          "web" : "https://github.com/kentfredric/MooseX-TypeArray/issues"
@@ -133,7 +134,7 @@
          "web" : "https://github.com/kentfredric/MooseX-TypeArray"
       }
    },
-   "version" : "0.1.1",
+   "version" : "0.2.0",
    "x_BuiltWith" : {
       "modules" : {
          "Devel::StackTrace" : "1.30",
@@ -186,6 +187,7 @@
          "Moose" : "2.1106",
          "Moose::Meta::TypeConstraint" : "2.1106",
          "Moose::Util::TypeConstraints" : "2.1106",
+         "MooseX::Attribute::ValidateWithException" : "0.3.0",
          "Pod::Coverage::TrustPod" : "0.100003",
          "Sub::Exporter" : "0.987",
          "Test::CPAN::Changes" : "0.26",
@@ -701,7 +703,7 @@
       "zilla" : {
          "class" : "Dist::Zilla::Dist::Builder",
          "config" : {
-            "is_trial" : "0"
+            "is_trial" : "1"
          },
          "version" : "5.006"
       }

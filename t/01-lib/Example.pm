@@ -4,6 +4,7 @@ use warnings;
 
 package Example;
 use Moose 2.1100;
+use MooseX::Attribute::ValidateWithException;
 use Example::TypeLib;
 
 has field => (

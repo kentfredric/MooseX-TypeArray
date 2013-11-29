@@ -17,7 +17,7 @@ my %module_build_args = (
     "Kent Fredric <kentnl\@cpan.org>"
   ],
   "dist_name" => "MooseX-TypeArray",
-  "dist_version" => "0.1.1",
+  "dist_version" => "0.2.0",
   "license" => "perl",
   "module_name" => "MooseX::TypeArray",
   "recommends" => {},
@@ -40,6 +40,7 @@ my %module_build_args = (
   "script_files" => [],
   "test_requires" => {
     "Moose" => "2.1100",
+    "MooseX::Attribute::ValidateWithException" => 0,
     "Test::Fatal" => 0,
     "Test::More" => "1.001002",
     "lib" => 0
@@ -50,6 +51,7 @@ my %module_build_args = (
 my %fallback_build_requires = (
   "Module::Build" => "0.4203",
   "Moose" => "2.1100",
+  "MooseX::Attribute::ValidateWithException" => 0,
   "Test::Fatal" => 0,
   "Test::More" => "1.001002",
   "lib" => 0

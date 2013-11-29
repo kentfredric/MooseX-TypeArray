@@ -6,7 +6,7 @@ BEGIN {
   $MooseX::TypeArray::AUTHORITY = 'cpan:KENTNL';
 }
 {
-  $MooseX::TypeArray::VERSION = '0.1.1';
+  $MooseX::TypeArray::VERSION = '0.2.0'; # TRIAL
 }
 
 # ABSTRACT: Create composite types where all subtypes must be satisfied
@@ -126,7 +126,7 @@ MooseX::TypeArray - Create composite types where all subtypes must be satisfied
 
 =head1 VERSION
 
-version 0.1.1
+version 0.2.0
 
 =head1 SYNOPSIS
 

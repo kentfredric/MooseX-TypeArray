@@ -7,7 +7,7 @@ BEGIN {
   $Moose::Meta::TypeConstraint::TypeArray::AUTHORITY = 'cpan:KENTNL';
 }
 {
-  $Moose::Meta::TypeConstraint::TypeArray::VERSION = '0.1.1';
+  $Moose::Meta::TypeConstraint::TypeArray::VERSION = '0.2.0'; # TRIAL
 }
 
 # ABSTRACT: Moose 'TypeArray' Base type constraint type.
@@ -121,7 +121,7 @@ Moose::Meta::TypeConstraint::TypeArray - Moose 'TypeArray' Base type constraint 
 
 =head1 VERSION
 
-version 0.1.1
+version 0.2.0
 
 =head1 AUTHOR
 
