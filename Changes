@@ -1,6 +1,6 @@
 Release history for MooseX-TypeArray
 
-0.2.0 2013-11-29T10:01:51Z
+0.2.0 2013-11-29T10:02:03Z
  [00 Major]
  - Moose >2.1100 compat
  - This class is mostly redundant and the same as Union
